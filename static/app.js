@@ -45,7 +45,9 @@ var controller = function($scope, $http, $log){
         }
 
         var url = build_url()
-        $log.info("the current url to use is: " + url)
+        $http.get(url).success(function(results){
+            $scope.current_dataset = results["results"]
+        })
     }
 }
 
