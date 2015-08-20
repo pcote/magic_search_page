@@ -17,19 +17,19 @@ var controller = function($scope, $http, $log){
 
             // dictionary building step
             var arg_dict = {}
-            if($scope.powerCheckbox && $scope.powerDropDown.length > 0){
+            if($scope.powerCheckbox && $scope.powerDropDown){
                 arg_dict["power"] = $scope.powerDropDown
             }
 
-            if($scope.toughnessCheckbox && $scope.toughnessDropDown.length > 0){
+            if($scope.toughnessCheckbox && $scope.toughnessDropDown){
                 arg_dict["toughness"] = $scope.toughnessDropDown
             }
 
-            if($scope.colorCheckbox && $scope.colorDropDown.length > 0){
+            if($scope.colorCheckbox && $scope.colorDropDown){
                 arg_dict["color"] = $scope.colorDropDown
             }
 
-            if($scope.loyaltyCheckbox && $scope.loyaltyDropDown.length > 0){
+            if($scope.loyaltyCheckbox && $scope.loyaltyDropDown){
                 arg_dict["loyalty"] = $scope.loyaltyDropDown
             }
 
@@ -44,10 +44,37 @@ var controller = function($scope, $http, $log){
             return final_url
         }
 
-        var url = build_url()
-        $http.get(url).success(function(results){
-            $scope.current_dataset = results["results"]
-        })
+        var server_update_needed = function(){
+            if($scope.powerCheckbox && $scope.powerDropDown){
+                return true
+            }
+
+            if($scope.toughnessCheckbox && $scope.toughnessDropDown){
+                return true
+            }
+
+            if($scope.colorCheckbox && $scope.colorDropDown){
+                return true
+            }
+
+            if($scope.loyaltyCheckbox && $scope.loyaltyDropDown){
+                return true
+            }
+
+            return false
+        }
+
+        if(server_update_needed()){
+            $log.info("server update needed")
+            var url = build_url()
+            $http.get(url).success(function(results){
+                $scope.current_dataset = results["results"]
+            })
+        }
+        else {
+            $log.info("server update not needed right now")
+            $scope.current_dataset = []
+        }
     }
 }
 

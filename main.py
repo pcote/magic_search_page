@@ -19,6 +19,7 @@ def get_info():
     color = _reqargs("color")
     loyalty = _reqargs("loyalty")
 
+    strength_results = []
     if power or toughness:
         strength_arg = "strength?"
         if power:
