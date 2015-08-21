@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request, jsonify
+from flask import Flask, redirect, request, jsonify, escape
 import requests
 
 class CardCollection(object):
@@ -34,6 +34,8 @@ def get_info():
     toughness = _reqargs("toughness")
     color = _reqargs("color")
     loyalty = _reqargs("loyalty")
+    text = _reqargs("text")
+
 
     card_collection = CardCollection()
     strength_results = []
@@ -61,6 +63,14 @@ def get_info():
         results = requests.get(full_url)
         results = requests.get(full_url).json().get("results")
         card_collection.update_queue(results)
+
+    if text:
+        from requests.utils import quote
+        full_url = base_url + "text?text=" + quote(text)
+        results = requests.get(full_url)
+        results = requests.get(full_url).json().get("results")
+        card_collection.update_queue(results)
+
 
 
     print(card_collection.collection)

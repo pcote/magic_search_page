@@ -97,7 +97,7 @@
                 </div>
                 <div class="col-xs-6">
                     <br />
-                    <input type="text" ng-model="textTextfield" ng-disabled="!textCheckbox" />
+                    <input type="text" ng-keydown="text_change_detected($event)" ng-model="textTextfield" ng-disabled="!textCheckbox" />
                 </div>
             </div>
             <hr />
