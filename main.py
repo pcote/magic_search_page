@@ -25,7 +25,7 @@ def index():
 
 @app.route("/lookupcards", methods=["GET"])
 def get_info():
-    base_url = "http://104.236.34.0/"
+    base_url = "http://104.236.34.0/getinfo?"
 
     def _reqargs(arg):
         return request.args.get(arg)
@@ -39,42 +39,33 @@ def get_info():
 
     card_collection = CardCollection()
     strength_results = []
-    if power or toughness:
-        strength_arg = "strength?"
-        if power:
-            strength_arg = strength_arg + "power=" + power + "&"
-        if toughness:
-            strength_arg = strength_arg + "toughness=" + toughness
 
-        strength_arg = strength_arg.rstrip("&")
-        full_url = base_url + strength_arg
-        print(full_url)
-        strength_results = requests.get(full_url).json().get("results")
-        card_collection.update_queue(strength_results)
+    full_url = base_url
+
+    if power or toughness:
+        strength_arg = ""
+        if power:
+            full_url += "power=" + power + "&"
+        if toughness:
+            full_url += "toughness=" + toughness + "&"
 
     if color:
-        full_url = base_url + "color?color=" + color
-        results = requests.get(full_url)
-        results = requests.get(full_url).json().get("results")
-        card_collection.update_queue(results)
+        full_url +=  "color=" + color + "&"
 
     if loyalty:
-        full_url = base_url + "loyalty/" + loyalty
-        results = requests.get(full_url)
-        results = requests.get(full_url).json().get("results")
-        card_collection.update_queue(results)
+        full_url += "loyalty=" + loyalty + "&"
 
     if text:
         from requests.utils import quote
-        full_url = base_url + "text?text=" + quote(text)
-        results = requests.get(full_url)
-        results = requests.get(full_url).json().get("results")
-        card_collection.update_queue(results)
+        full_url += "text=" + quote(text)
 
+    full_url = full_url.rstrip("&")
 
+    res = requests.get(full_url)
+    json_data = res.json()
+    cards = json_data.get("results")
 
-    print(card_collection.collection)
-    return jsonify({"results":card_collection.collection})
+    return jsonify({"results":cards})
 
 if __name__ == "__main__":
     app.run(debug=True)
