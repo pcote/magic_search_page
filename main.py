@@ -61,7 +61,9 @@ def get_info():
 
     full_url = full_url.rstrip("&")
 
+    app.logger.info("URL to use to query web service api: {}".format(full_url))
     res = requests.get(full_url)
+    app.logger.info("Status code returned for web service api query: {}".format(res.status_code))
     json_data = res.json()
     cards = json_data.get("results")
 

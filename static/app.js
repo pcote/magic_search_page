@@ -71,7 +71,9 @@ var controller = function($scope, $http, $log){
         if(server_update_needed()){
             $log.info("server update needed")
             var url = build_url()
+            $log.info("url to use: " + url)
             $http.get(url).success(function(results){
+                $log.info("successfully got back " + results["results"].length + " results.")
                 $scope.current_dataset = results["results"]
             })
         }
